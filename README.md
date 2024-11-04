@@ -13,5 +13,5 @@
 황상민(20201558)<br/>
 
 ## 개발환경
-프로그래밍 언어: JavaScript
+프로그래밍 언어: JavaScript <br/>
 IDE: NotePad++
