@@ -13,4 +13,5 @@
 황상민(20201558)<br/>
 
 ## 개발환경
-html, js, css 파일을 **nottpad+** 프로그램으로 작성했습니다.
+프로그래밍 언어: JavaScript
+IDE: NotePad++
