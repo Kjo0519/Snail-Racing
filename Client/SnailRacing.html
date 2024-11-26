@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://apis.google.com/js/api.js"></script>
+    <title>달팽이 레이싱</title>
+</head>
+<body>
+
+	<form id="loginForm">
+		<label for="username">아이디</label>
+		<input type="text" id="username" required>
+		<label for="password">비밀번호</label>
+		<input type="text" id="password" required>
+		<button id="loginButton" type="button" onclick="login()">로그인</button>
+	</form>
+	
+	<div id="mainContainer" style="display: block;">
+
+	<img id="success_img" src="img/success.png" style="display: none;" alt="게임 이미지"> <!-- 성공 이미지 -->
+
+    <img id="img" src="img/maing_bg.png" alt="게임 이미지"> <!-- 이미지 URL을 적절하게 수정 -->
+	
+	<img id="restart_Button" onclick="restart()" src="img/restart.png">
+	
+    <div id="balance" class="coin-container"><img src="img/coin.png">x10</div>
+	
+	<!-- 컬렉션 북 -->
+	<div id="container" style="display: none;" >
+		📒 컬렉션 북 📒
+		<div id="collectionBook">
+			<div id="collectionList"></div>
+		</div>
+		<div id="newItem_text">🐌 달팽이 뽑기 (15코인) 🐌</div>
+		<div id="newItem"></div>
+		
+		<button id="drawButton">아이템 뽑기</button>
+	</div>
+	
+	
+	  <button id="help-button" style="display: none;">?</button>
+	  <!-- 모달 -->
+	  <div id="modal">
+		<div class="modal-content">
+		  <!-- 페이지 선택 -->
+		  <div class="page-selector">
+			<span id="tab-1" class="tab active">달팽이레이싱</span>
+			<span id="tab-2" class="tab">컬렉션 북</span>
+		  </div>
+
+		  <!-- 1페이지 내용 -->
+		  <div id="page-1" class="page active">
+			<h2>🐌 달팽이레이싱 🐌</h2>
+			<img src="img/intro.png" alt="이미지 1" class="modal-image">
+			<p>게임방법</p>
+			<p>1. 배팅 코인 입력창에 코인을 배팅합니다.</p>
+			<p>2. 달팽이를 선택하고 게임 시작을 버튼을 클릭합니다. (달팽이 변경 가능)</p>
+			<p>3. 승리 시에 배팅 금액의 4배를 획득하고, 패배 시 배팅 금액을 모두 잃습니다.</p>
+		  </div>
+
+		  <!-- 2페이지 내용 -->
+		  <div id="page-2" class="page">
+			<h2>📒 컬렉션 북 📒</h2>
+			<img src="img/book.png" alt="이미지 2" class="modal-image">
+			<p>1. 뽑기를 하면 컬렉션 북에 달팽이가 랜덤으로 추가됩니다.</p>
+			<p>2. 컬렉션 북은 커먼, 레어, 에픽, 레전드의 등급으로 나뉘어져 있으며 각 등급마다 모두 획득 시 보상이 있습니다.</p>
+			<p>3. 컬렉션 북의 모든 달팽이를 획득하면 게임 클리어입니다!</p>
+		  </div>
+
+		  <button id="close-button" class="close-button">닫기</button>
+		</div>
+	  </div>
+	
+	<div id="snailRacing" style="display:none;">
+		<img id="rr_img" src="img/rr.png" width="100%" height="100%" alt="게임 이미지">
+
+		<!-- 베팅 금액 입력 -->
+		<div id = "batting_main">
+			<img id = "snail1_img" src="img/blueping.gif">
+			<button id="snail1_button" type="button" onclick="placeBetSnail('파란 달팽이')">선택</button>
+			
+				<img id = "snail2_img" src="img/redping.gif">
+				<button id="snail2_button" type="button" onclick="placeBetSnail('빨간 달팽이')">선택</button>
+				
+			<img id = "snail3_img" src="img/pingping.gif">
+				<button id="snail3_button" type="button" onclick="placeBetSnail('코크 달팽이')">선택</button>
+		
+			<input type="text" id="betAmountSnail" oninput="formatBetAmountSnail()" placeholder="배팅 코인 입력">
+			<button id="rs_button" type="button" onclick="startSnailRace()">게임<br>시작</button>
+			
+			
+			<div id="select_snail_text">선택한 달팽이</div>
+				<div id="select_snail"></div>
+			<div id="betting_coin_text">배팅한 코인</div>
+				<div id="betting_coin"></div>
+		</div>
+		
+		<div id ="batting_end">
+			<div id="winner_snail_text">승리한 달팽이</div>
+				<div id="winner_snail"></div>
+			<div id="get_coin_text">코인 수익</div>
+				<div id="get_coin"></div>
+		</div>
+		
+		<!-- 게임 영역 -->
+		<img id ="game_bg_1" src="img/rr_bg.png">
+		<img id ="game_bg_2" src="img/rr_bg.png">
+		<img id ="game_bg_3" src="img/rr_bg.png">
+		
+		<div id="gameArea">
+			<div id="snail1" class="snail"><img src="img/blueping.gif" height="75%" width="70%"></div>
+			<div id="snail2" class="snail"><img src="img/redping.gif" height="75%" width="70%"></div>
+			<div id="snail3" class="snail"><img src="img/pingping.gif" height="75%" width="70%"></div>
+		</div>
+		
+		
+		<!-- 결과 출력 -->
+		<p id="raceResult"></p>
+
+		<img id="backButton" onclick="closeWindow()" src="img/end.png">
+	</div>
+	<div id="rewardMessage" style="display: none; position: absolute; top: 10%; left: 50%; transform: translateX(-50%); background-color: rgba(0, 0, 0, 0.8); color: white; padding: 20px; border-radius: 10px; text-align: center; font-size: 1.5em; z-index: 1000;"></div>
+
+
+	  <audio id="snailMusic" loop>
+            <source src="RestNPeace.mp3" type="audio/mpeg">
+      </audio>
+		
+	<img id="ending_img" src="img/ending.png" style="display: none;">
+	
+	<audio id="sound">
+        <source src="welcome.mp3" type="audio/mpeg">
+    </audio>
+	
+	<audio id="race">
+        <source src="race.mp3" type="audio/mpeg">
+    </audio>
+	
+	<audio id="selet">
+		<source src="select.mp3" type="audio/mpeg">
+	</audio>
+	
+	 <audio id="endingMusic">
+         <source src="ending.mp3" type="audio/mpeg">
+	</audio>
+	
+	<audio id="clap">
+         <source src="clap.mp3" type="audio/mpeg">
+	</audio>	
+	<img id="ending_img" src="img/ending.png" style="display: none;">
+	
+	<script type="text/javascript" src="js.js"></script>
+</body>
